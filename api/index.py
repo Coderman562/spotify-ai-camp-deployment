@@ -22,9 +22,9 @@ predictor = GenrePredictor()
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def index():
-    return "Hello, this is my Flask app!"
+#@app.route('/')
+#def index():
+#    return "Hello, this is my Flask app!"
 
 @app.route('/api/get-5-songs', methods=['GET'])
 def get_5_songs():
@@ -161,8 +161,8 @@ def get_chosen_song_give_reccomended_songs():
     data = {"tracks": tracks_info}
     return data
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+#if __name__ == '__main__':
+#    app.run(host='0.0.0.0', port=5000)
     
 # if __name__ == '__main__':
 #     app.run(debug=True)
