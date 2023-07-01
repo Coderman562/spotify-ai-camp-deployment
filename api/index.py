@@ -166,3 +166,140 @@ def get_chosen_song_give_reccomended_songs():
     
 # if __name__ == '__main__':
 #     app.run(debug=True)
+
+import joblib
+import pandas as pd
+import os
+
+class GenrePredictor:
+    def __init__(self):
+        # Get the absolute path of the directory where app.py is located
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        # Use the absolute path to load the model
+        model_path = os.path.join(dir_path, 'trained_model_xgboost_v2.joblib')
+        self.model = joblib.load(model_path)
+
+        # Use the absolute path to load the label encoder
+        encoder_path = os.path.join(dir_path, 'label_encoder_v2.joblib')
+        self.label_encoder = joblib.load(encoder_path)
+
+    def predict_genre(self, input_data):
+        print(input_data.head())
+        # Select the non-numerical columns
+        non_numerical_cols = input_data.select_dtypes(include=['object']).columns
+        
+        print(non_numerical_cols)
+
+        # Perform one-hot encoding on the non-numerical columns
+        input_data_encoded = pd.get_dummies(input_data, columns=non_numerical_cols)
+        
+        print(input_data_encoded)
+
+        # Standardize the features
+        # scaler = StandardScaler()
+        # input_data_scaled = scaler.fit_transform(input_data_encoded)
+
+        # Make predictions on the input data
+        y_pred_encoded = self.model.predict(input_data)
+        
+        print(y_pred_encoded)
+
+        # Inverse transform the encoded predictions
+        y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
+
+        return y_pred
+
+
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+import pandas as pd
+import requests
+import base64
+
+client_id = 'f74d125a75774bb886fea891b2324a1a'
+client_secret = '4f5e9dc1a61e442bb5f6d3aa83b4d185'
+
+
+class spotify:
+
+  def __init__(self, client_id, client_secret):
+    self.client_id = client_id
+    self.client_secret = client_secret
+    self.client_credentials_manager = SpotifyClientCredentials(
+      client_id=client_id, client_secret=client_secret)
+    self.sp = spotipy.Spotify(
+      client_credentials_manager=self.client_credentials_manager)
+    self.token = self.get_spotify_token()
+
+  def get_spotify_token(self):
+    # Encode the credentials in base64
+    credentials = base64.b64encode(
+      f"{self.client_id}:{self.client_secret}".encode()).decode()
+
+    headers = {"Authorization": f"Basic {credentials}"}
+
+    data = {"grant_type": "client_credentials"}
+
+    response = requests.post("https://accounts.spotify.com/api/token",
+                             headers=headers,
+                             data=data)
+    response.raise_for_status()
+
+    return response.json()["access_token"]
+
+  def get_recommendations_from_genre(self, seed_genres):
+    limit = len(seed_genres)*4
+
+    base_url = "https://api.spotify.com/v1/recommendations"
+    headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": f"Bearer {self.token}"
+    }
+    params = {"seed_genres": ','.join(seed_genres), "limit": limit}
+
+    response = requests.get(base_url, headers=headers, params=params)
+
+    if response.status_code != 200:
+      raise Exception(
+        f"Request failed with status code {response.status_code}")
+
+    data = response.json()
+    tracks = data['tracks']
+
+    return tracks
+
+  def get_track_details(self, track_id):
+    # Get the track details
+    track = self.sp.track(track_id)
+
+    # Get the preview URL
+    preview_url = track['preview_url']
+
+    # Get the Spotify song URL
+    spotify_url = track['external_urls']['spotify']
+
+    # Get the image of the song
+    image_url = track['album']['images'][0]['url']
+
+    return preview_url, spotify_url, image_url
+
+  def get_track_features(self, track_id):
+    # Get the audio features for the track
+    audio_features = self.sp.audio_features([track_id])[0]
+
+    # Extract the desired attributes
+    danceability = audio_features['danceability']
+    energy = audio_features['energy']
+    key = audio_features['key']
+    loudness = audio_features['loudness']
+    mode = audio_features['mode']
+    speechiness = audio_features['speechiness']
+    acousticness = audio_features['acousticness']
+    instrumentalness = audio_features['instrumentalness']
+    liveness = audio_features['liveness']
+    valence = audio_features['valence']
+    tempo = audio_features['tempo']
+
+    return danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo
