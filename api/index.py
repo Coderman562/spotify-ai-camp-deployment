@@ -7,44 +7,44 @@ import joblib
 import pandas as pd
 import os
 
-class GenrePredictor:
-    def __init__(self):
-        # Get the absolute path of the directory where app.py is located
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+# class GenrePredictor:
+#     def __init__(self):
+#         # Get the absolute path of the directory where app.py is located
+#         dir_path = os.path.dirname(os.path.realpath(__file__))
 
-        # Use the absolute path to load the model
-        model_path = os.path.join(dir_path, 'trained_model_xgboost_v2.joblib')
-        self.model = joblib.load(model_path)
+#         # Use the absolute path to load the model
+#         model_path = os.path.join(dir_path, 'trained_model_xgboost_v2.joblib')
+#         self.model = joblib.load(model_path)
 
-        # Use the absolute path to load the label encoder
-        encoder_path = os.path.join(dir_path, 'label_encoder_v2.joblib')
-        self.label_encoder = joblib.load(encoder_path)
+#         # Use the absolute path to load the label encoder
+#         encoder_path = os.path.join(dir_path, 'label_encoder_v2.joblib')
+#         self.label_encoder = joblib.load(encoder_path)
 
-    def predict_genre(self, input_data):
-        print(input_data.head())
-        # Select the non-numerical columns
-        non_numerical_cols = input_data.select_dtypes(include=['object']).columns
+#     def predict_genre(self, input_data):
+#         print(input_data.head())
+#         # Select the non-numerical columns
+#         non_numerical_cols = input_data.select_dtypes(include=['object']).columns
         
-        print(non_numerical_cols)
+#         print(non_numerical_cols)
 
-        # Perform one-hot encoding on the non-numerical columns
-        input_data_encoded = pd.get_dummies(input_data, columns=non_numerical_cols)
+#         # Perform one-hot encoding on the non-numerical columns
+#         input_data_encoded = pd.get_dummies(input_data, columns=non_numerical_cols)
         
-        print(input_data_encoded)
+#         print(input_data_encoded)
 
-        # Standardize the features
-        # scaler = StandardScaler()
-        # input_data_scaled = scaler.fit_transform(input_data_encoded)
+#         # Standardize the features
+#         # scaler = StandardScaler()
+#         # input_data_scaled = scaler.fit_transform(input_data_encoded)
 
-        # Make predictions on the input data
-        y_pred_encoded = self.model.predict(input_data)
+#         # Make predictions on the input data
+#         y_pred_encoded = self.model.predict(input_data)
         
-        print(y_pred_encoded)
+#         print(y_pred_encoded)
 
-        # Inverse transform the encoded predictions
-        y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
+#         # Inverse transform the encoded predictions
+#         y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
 
-        return y_pred
+#         return y_pred
 
 
 import spotipy
@@ -153,7 +153,7 @@ client_id = 'f74d125a75774bb886fea891b2324a1a'
 client_secret = '4f5e9dc1a61e442bb5f6d3aa83b4d185'
 
 s = spotify(client_id, client_secret)
-predictor = GenrePredictor()
+# predictor = GenrePredictor()
 
 app = Flask(__name__)
 CORS(app)
@@ -218,84 +218,84 @@ def get_5_songs():
     return jsonify(data)
 
 
-@app.route('/api/get-chosen-song-give-reccomended-songs', methods=['POST'])
-def get_chosen_song_give_reccomended_songs():
-    data = request.get_json()
-    print(data)
-    song_info = data.get('track')
+# @app.route('/api/get-chosen-song-give-reccomended-songs', methods=['POST'])
+# def get_chosen_song_give_reccomended_songs():
+#     data = request.get_json()
+#     print(data)
+#     song_info = data.get('track')
 
-    track_features = {
-        'explicit': song_info.get('explicit'),
-        'danceability': song_info.get('danceability'),
-        'energy': song_info.get('energy'),
-        'key': song_info.get('key'),
-        'loudness': song_info.get('loudness'),
-        'mode': song_info.get('mode'),
-        'speechiness': song_info.get('speechiness'),
-        'acousticness': song_info.get('acousticness'),
-        'instrumentalness': song_info.get('instrumentalness'),
-        'liveness': song_info.get('liveness'),
-        'valence': song_info.get('valence'),
-        'tempo': song_info.get('tempo')
-    }
+#     track_features = {
+#         'explicit': song_info.get('explicit'),
+#         'danceability': song_info.get('danceability'),
+#         'energy': song_info.get('energy'),
+#         'key': song_info.get('key'),
+#         'loudness': song_info.get('loudness'),
+#         'mode': song_info.get('mode'),
+#         'speechiness': song_info.get('speechiness'),
+#         'acousticness': song_info.get('acousticness'),
+#         'instrumentalness': song_info.get('instrumentalness'),
+#         'liveness': song_info.get('liveness'),
+#         'valence': song_info.get('valence'),
+#         'tempo': song_info.get('tempo')
+#     }
 
-    df = pd.DataFrame.from_dict([track_features])
-    genre_category = predictor.predict_genre(df)
+#     df = pd.DataFrame.from_dict([track_features])
+#     genre_category = predictor.predict_genre(df)
     
-    print(genre_category)
+#     print(genre_category)
 
-    # Select five random genres from the predicted category
-    seed_genres = random.sample(genre_dict.get(genre_category[0], []), 5)
+#     # Select five random genres from the predicted category
+#     seed_genres = random.sample(genre_dict.get(genre_category[0], []), 5)
 
-    # List to store track features
-    tracks_info = []
+#     # List to store track features
+#     tracks_info = []
 
-# Keep fetching recommendations until we have at least 3 so ngs
-    while len(tracks_info) < 3:
-        recommendations = s.get_recommendations_from_genre(seed_genres)
+# # Keep fetching recommendations until we have at least 3 so ngs
+#     while len(tracks_info) < 3:
+#         recommendations = s.get_recommendations_from_genre(seed_genres)
 
-        for track in recommendations:
-            track_name = track['name']
-            artist_name = track['artists'][0]['name']
-            preview_url = track['preview_url']
-            spotify_url = track['external_urls']['spotify']
-            track_image = track['album']['images'][0]['url'] if track['album']['images'] else None
-            track_id = track['id']
-            explicit = track['explicit']
-            danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo = s.get_track_features(track_id)
+#         for track in recommendations:
+#             track_name = track['name']
+#             artist_name = track['artists'][0]['name']
+#             preview_url = track['preview_url']
+#             spotify_url = track['external_urls']['spotify']
+#             track_image = track['album']['images'][0]['url'] if track['album']['images'] else None
+#             track_id = track['id']
+#             explicit = track['explicit']
+#             danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo = s.get_track_features(track_id)
 
-            # Check if preview_url is not None or empty
-            if preview_url:
-                track_features = {
-                    'trackName': track_name,
-                    'artistName': artist_name,
-                    'previewUrl': preview_url,
-                    'spotifyUrl': spotify_url,
-                    'trackImage': track_image,
-                    'trackId': track_id,
-                    'Explicit': explicit,
-                    'Danceability': danceability,
-                    'Energy': energy,
-                    'Key': key,
-                    'Loudness': loudness,
-                    'Mode': mode,
-                    'Speechiness': speechiness,
-                    'Acousticness': acousticness,
-                    'Instrumentalness': instrumentalness,
-                    'Liveness': liveness,
-                    'Valence': valence,
-                    'Tempo': tempo
-                }
+#             # Check if preview_url is not None or empty
+#             if preview_url:
+#                 track_features = {
+#                     'trackName': track_name,
+#                     'artistName': artist_name,
+#                     'previewUrl': preview_url,
+#                     'spotifyUrl': spotify_url,
+#                     'trackImage': track_image,
+#                     'trackId': track_id,
+#                     'Explicit': explicit,
+#                     'Danceability': danceability,
+#                     'Energy': energy,
+#                     'Key': key,
+#                     'Loudness': loudness,
+#                     'Mode': mode,
+#                     'Speechiness': speechiness,
+#                     'Acousticness': acousticness,
+#                     'Instrumentalness': instrumentalness,
+#                     'Liveness': liveness,
+#                     'Valence': valence,
+#                     'Tempo': tempo
+#                 }
 
-                tracks_info.append(track_features)
+#                 tracks_info.append(track_features)
 
-            # Break the loop if we have at least 3 songs
-            if len(tracks_info) >= 3:
-                break
+#             # Break the loop if we have at least 3 songs
+#             if len(tracks_info) >= 3:
+#                 break
 
-    print(tracks_info)
-    data = {"tracks": tracks_info}
-    return data
+#     print(tracks_info)
+#     data = {"tracks": tracks_info}
+#     return data
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000)
