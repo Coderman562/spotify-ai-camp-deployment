@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "flask-dev": "FLASK_DEBUG=1 pip3 install -r requirements.txt && python3 -m flask --app backend/app run -p 5000",
+    "flask-dev": "python -m flask --app api/index run -p 5328",
     "next-dev": "next dev",
-    "!dev": "concurrently \"pnpm run next-dev\" \"pnpm run flask-dev\"",
-    "dev": "next dev",
+    "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
+    "!dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -39,6 +39,7 @@
     "bootstrap": "^5.3.0",
     "class-variance-authority": "^0.6.1",
     "cmdk": "^0.2.0",
+    "concurrently": "^8.2.0",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",
     "headlessui": "^0.0.0",

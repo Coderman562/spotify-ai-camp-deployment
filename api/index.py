@@ -7,9 +7,12 @@ import joblib
 import pandas as pd
 import os
 
+#import sys
+#from pathlib import Path
+#sys.path.insert(0, str(Path(__file__).resolve()))
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve()))
+sys.path.insert(0, "api")
 
 from spotify import spotify
 
