@@ -7,6 +7,10 @@ import joblib
 import pandas as pd
 import os
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve()))
+
 from spotify import spotify
 
 # class GenrePredictor:
