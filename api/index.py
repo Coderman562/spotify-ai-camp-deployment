@@ -217,6 +217,74 @@ def get_5_songs():
     data = {"tracks": tracks_info}
     return jsonify(data)
 
+@app.route('/api/get-chosen-song-give-reccomended-songs', methods=['POST'])
+def get_chosen_song_give_reccomended_songs():
+    data = request.get_json()
+    song_info = data.get('track')
+
+    s = spotify(client_id, client_secret)
+
+    print("checkpoint 1")
+
+    genre_category = random.choice(list(genre_dict.keys()))
+
+    print(genre_category)
+
+    # Select five random genres from the predicted category
+    seed_genres = random.sample(genre_dict.get(genre_category, []), 5)
+
+    print(seed_genres)
+
+    # List to store track features
+    tracks_info = []
+
+    # Keep fetching recommendations until we have at least 3 songs
+    while len(tracks_info) < 3:
+        print("checkpoint 2")
+        recommendations = s.get_recommendations_from_genre(seed_genres)
+
+        for track in recommendations:
+            print("checkpoint 3")
+            track_name = track['name']
+            artist_name = track['artists'][0]['name']
+            preview_url = track['preview_url']
+            spotify_url = track['external_urls']['spotify']
+            track_image = track['album']['images'][0]['url'] if track['album']['images'] else None
+            track_id = track['id']
+            explicit = track['explicit']
+            danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo = s.get_track_features(track_id)
+
+            # Check if preview_url is not None or empty
+            if preview_url:
+                track_features = {
+                    'trackName': track_name,
+                    'artistName': artist_name,
+                    'previewUrl': preview_url,
+                    'spotifyUrl': spotify_url,
+                    'trackImage': track_image,
+                    'trackId': track_id,
+                    'Explicit': explicit,
+                    'Danceability': danceability,
+                    'Energy': energy,
+                    'Key': key,
+                    'Loudness': loudness,
+                    'Mode': mode,
+                    'Speechiness': speechiness,
+                    'Acousticness': acousticness,
+                    'Instrumentalness': instrumentalness,
+                    'Liveness': liveness,
+                    'Valence': valence,
+                    'Tempo': tempo
+                }
+
+                tracks_info.append(track_features)
+
+            # Break the loop if we have at least 3 songs
+            if len(tracks_info) >= 3:
+                break
+
+    data = {"tracks": tracks_info}
+    return data
 
 # @app.route('/api/get-chosen-song-give-reccomended-songs', methods=['POST'])
 # def get_chosen_song_give_reccomended_songs():
