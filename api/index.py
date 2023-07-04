@@ -33,12 +33,8 @@ genre_dict = {
     "Country/Jazz/Blues/Classical": ["acoustic", "bluegrass", "blues", "bossanova", "brazil", "british", "country", "classical", "french", "gospel", "honky-tonk", "indian", "iranian", "jazz", "new-age", "opera", "piano", "show-tunes", "singer-songwriter", "spanish", "tango", "turkish", "world-music"]
 }
 
-# Spotify details
-client_id = 'f74d125a75774bb886fea891b2324a1a'
-client_secret = '4f5e9dc1a61e442bb5f6d3aa83b4d185'
-
 s = spotify(client_id, client_secret)
-# predictor = GenrePredictor()
+predictor = GenrePredictor()
 
 app = Flask(__name__)
 CORS(app)
@@ -49,6 +45,8 @@ CORS(app)
 
 @app.route('/api/get-5-songs', methods=['GET'])
 def get_5_songs():
+    s = spotify(client_id, client_secret)
+
     while True:
         # Randomly select a genre category
         genre_category = random.choice(list(genre_dict.keys()))
@@ -176,6 +174,10 @@ def get_chosen_song_give_reccomended_songs():
     data = request.get_json()
     print(data)
     song_info = data.get('track')
+    
+    s = spotify(client_id, client_secret)
+    predictor = GenrePredictor()
+
 
     track_features = {
         'explicit': song_info.get('explicit'),
