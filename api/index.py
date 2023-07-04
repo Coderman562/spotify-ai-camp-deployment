@@ -297,6 +297,58 @@ def get_5_songs():
 #     data = {"tracks": tracks_info}
 #     return data
 
+@app.route('/1')
+def example():
+   return "Hello, this is my Flask app!"
+
+@app.route('/2')
+def example2():
+   return "Hello, this is my Flask app!"
+
+@app.route('/3')
+def example3():
+   return "Hello, this is my Flask app!"
+
+@app.route('/4')
+def example4():
+   return "Hello, this is my Flask app!"
+
+@app.route('/5')
+def example5():
+   return "Hello, this is my Flask app!"
+
+@app.route('/6')
+def example6():
+   return "Hello, this is my Flask app!"
+
+@app.route('/7')
+def example7():
+   return "Hello, this is my Flask app!"
+
+@app.route('/8')
+def example8():
+   return "Hello, this is my Flask app!"
+
+@app.route('/9')
+def example9():
+   return "Hello, this is my Flask app!"
+
+@app.route('/10')
+def example10():
+   return "Hello, this is my Flask app!"
+
+@app.route('/11')
+def example11():
+   return "Hello, this is my Flask app!"
+
+@app.route('/12')
+def example12():
+   return "Hello, this is my Flask app!"
+
+@app.route('/13')
+def example13():
+   return "Hello, this is my Flask app!"
+
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000)
     
