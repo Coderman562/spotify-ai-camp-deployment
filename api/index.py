@@ -297,55 +297,55 @@ def get_5_songs():
 #     data = {"tracks": tracks_info}
 #     return data
 
-@app.route('/1')
+@app.route('/api/1')
 def example():
    return "Hello, this is my Flask app!"
 
-@app.route('/2')
+@app.route('/api/2')
 def example2():
    return "Hello, this is my Flask app!"
 
-@app.route('/3')
+@app.route('/api/3')
 def example3():
    return "Hello, this is my Flask app!"
 
-@app.route('/4')
+@app.route('/api/4')
 def example4():
    return "Hello, this is my Flask app!"
 
-@app.route('/5')
+@app.route('/api/5')
 def example5():
    return "Hello, this is my Flask app!"
 
-@app.route('/6')
+@app.route('/api/6')
 def example6():
    return "Hello, this is my Flask app!"
 
-@app.route('/7')
+@app.route('/api/7')
 def example7():
    return "Hello, this is my Flask app!"
 
-@app.route('/8')
+@app.route('/api/8')
 def example8():
    return "Hello, this is my Flask app!"
 
-@app.route('/9')
+@app.route('/api/9')
 def example9():
    return "Hello, this is my Flask app!"
 
-@app.route('/10')
+@app.route('/api/10')
 def example10():
    return "Hello, this is my Flask app!"
 
-@app.route('/11')
+@app.route('/api/11')
 def example11():
    return "Hello, this is my Flask app!"
 
-@app.route('/12')
+@app.route('/api/12')
 def example12():
    return "Hello, this is my Flask app!"
 
-@app.route('/13')
+@app.route('/api/13')
 def example13():
    return "Hello, this is my Flask app!"
 
