@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 from spotify import spotify
-from model import GenrePredictor
+# from model import GenrePredictor
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
