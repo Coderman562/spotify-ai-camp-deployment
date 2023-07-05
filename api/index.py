@@ -14,6 +14,12 @@ import sys
 from pathlib import Path
 sys.path.insert(0, "api")
 
+import logging
+
+# Set up the logger
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 from spotify import spotify
 from model import GenrePredictor
 
@@ -45,6 +51,9 @@ CORS(app)
 
 @app.route('/api/get-5-songs', methods=['GET'])
 def get_5_songs():
+   print("STARTED!")
+   logger.info("STARTED!")
+   
     s = spotify(client_id, client_secret)
 
     while True:
